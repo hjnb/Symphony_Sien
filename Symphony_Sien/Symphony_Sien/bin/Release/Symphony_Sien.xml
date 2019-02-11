@@ -1,0 +1,287 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+Symphony_Sien
+</name>
+</assembly>
+<members>
+<member name="T:Symphony_Sien.My.Resources.Resources">
+<summary>
+  A strongly-typed resource class, for looking up localized strings, etc.
+</summary>
+</member>
+<member name="P:Symphony_Sien.My.Resources.Resources.ResourceManager">
+<summary>
+  Returns the cached ResourceManager instance used by this class.
+</summary>
+</member>
+<member name="P:Symphony_Sien.My.Resources.Resources.Culture">
+<summary>
+  Overrides the current thread's CurrentUICulture property for all
+  resource lookups using this strongly typed resource class.
+</summary>
+</member>
+<member name="M:Symphony_Sien.TopForm.TopForm_Load(System.Object,System.EventArgs)">
+ <summary>
+ loadイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.initPrintState">
+ <summary>
+ ラジオボタン初期設定
+ </summary>
+</member>
+<member name="M:Symphony_Sien.TopForm.rbtnPreview_CheckedChanged(System.Object,System.EventArgs)">
+ <summary>
+ ﾌﾟﾚﾋﾞｭｰラジオボタン値変更イベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.rbtnPrintout_CheckedChanged(System.Object,System.EventArgs)">
+ <summary>
+ 印刷ラジオボタン値変更イベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.topPicture_Click(System.Object,System.EventArgs)">
+ <summary>
+ トップ画像クリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.btnHouseDiary_Click(System.Object,System.EventArgs)">
+ <summary>
+ ハウス日誌ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.btnResidentRegist_Click(System.Object,System.EventArgs)">
+ <summary>
+ 入居者登録ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.btnRoomRegist_Click(System.Object,System.EventArgs)">
+ <summary>
+ 居室登録ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.TopForm.btnWash_Click(System.Object,System.EventArgs)">
+ <summary>
+ 洗濯関係ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.Util.EnableDoubleBuffering(System.Windows.Forms.Control)">
+ <summary>
+ コントロールのDoubleBufferedプロパティをTrueにする
+ </summary>
+ <param name="control">対象のコントロール</param>
+</member>
+<member name="M:Symphony_Sien.Util.checkDBNullValue(System.Object)">
+ <summary>
+ dgvのセルの値がNullかチェック、Nullの場合空文字を返す
+ </summary>
+ <param name="dgvCellValue"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.Util.convADStrToWarekiStr(System.String)">
+ <summary>
+ 西暦(yyyy/MM/dd)を和暦に変換
+ </summary>
+ <param name="adStr"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.Util.convWarekiStrToADStr(System.String)">
+ <summary>
+ 和暦を西暦に変換
+ </summary>
+ <param name="warekiStr"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.Util.getKanji(System.String)">
+ <summary>
+ 和暦の漢字を取得
+ </summary>
+ <param name="warekiStr"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.Util.getIniString(System.String,System.String,System.String)">
+ <summary>
+ iniファイルから読み込み
+ </summary>
+ <param name="lpSection">セクション名</param>
+ <param name="lpKeyName">読み込むkey名</param>
+ <param name="lpFileName">iniファイルパス</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.Util.putIniString(System.String,System.String,System.String,System.String)">
+ <summary>
+ iniファイルへ書き込み
+ </summary>
+ <param name="lpSection">セクション名</param>
+ <param name="lpKeyName">書き込む対象のkey名</param>
+ <param name="lpValue">書き込む値</param>
+ <param name="lpFileName">iniファイルパス</param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
+<member name="T:Symphony_Sien.入居者登録.dgvRowHeaderCell">
+ <summary>
+ 行ヘッダーのカレントセルを表す三角マークを非表示に設定する為のクラス。
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.入居者登録.#ctor">
+ <summary>
+ コンストラクタ
+ </summary>
+</member>
+<member name="M:Symphony_Sien.入居者登録.入居者登録_KeyDown(System.Object,System.Windows.Forms.KeyEventArgs)">
+ <summary>
+ keyDownイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.入居者登録.入居者登録_Load(System.Object,System.EventArgs)">
+ <summary>
+ loadイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.入居者登録.clearInputText">
+ <summary>
+ テキストクリア
+ </summary>
+</member>
+<member name="M:Symphony_Sien.入居者登録.initTextBox">
+ <summary>
+ テキストボックス初期設定
+ </summary>
+</member>
+<member name="M:Symphony_Sien.入居者登録.initDgvResident">
+ <summary>
+ データグリッドビュー初期設定
+ </summary>
+</member>
+<member name="M:Symphony_Sien.入居者登録.displayDgvResident">
+ <summary>
+ dgvデータ表示
+ </summary>
+</member>
+<member name="M:Symphony_Sien.入居者登録.settingDgvResident">
+ <summary>
+ dgv表示設定
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.入居者登録.dgvResident_CellPainting(System.Object,System.Windows.Forms.DataGridViewCellPaintingEventArgs)">
+ <summary>
+ CellPaintingイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.入居者登録.dgvResident_CellMouseClick(System.Object,System.Windows.Forms.DataGridViewCellMouseEventArgs)">
+ <summary>
+ セルマウスクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.入居者登録.btnRegist_Click(System.Object,System.EventArgs)">
+ <summary>
+ 登録ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.入居者登録.btnDelete_Click(System.Object,System.EventArgs)">
+ <summary>
+ 削除ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.#ctor(System.String)">
+ <summary>
+ コンストラクタ
+ </summary>
+ <param name="mdbFilePass">データベースファイルパス</param>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.印鑑パスワード_KeyDown(System.Object,System.Windows.Forms.KeyEventArgs)">
+ <summary>
+ keyDownイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.印鑑パスワード_Load(System.Object,System.EventArgs)">
+ <summary>
+ Loadイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.settingTextBox">
+ <summary>
+ テキストボックス設定
+ </summary>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.checkPassword(System.String)">
+ <summary>
+ パスワード照合
+ </summary>
+ <param name="inputPass">入力パスワード</param>
+ <returns>パスワード登録済みの有無</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.changePassword(System.String,System.String)">
+ <summary>
+ 登録パスワード変更
+ </summary>
+ <param name="oldPass">旧パスワード</param>
+ <param name="newPass">新パスワード</param>
+ <returns>変更の有無</returns>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.btnOk_Click(System.Object,System.EventArgs)">
+ <summary>
+ OKボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+ <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.印鑑パスワード.btnCancel_Click(System.Object,System.EventArgs)">
+ <summary>
+ キャンセルボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+ <remarks></remarks>
+</member>
+</members>
+</doc>
