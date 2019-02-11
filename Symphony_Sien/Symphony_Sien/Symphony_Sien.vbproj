@@ -151,6 +151,9 @@
     <EmbeddedResource Include="印鑑パスワード.resx">
       <DependentUpon>印鑑パスワード.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="居室登録.resx">
+      <DependentUpon>居室登録.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">
