@@ -58,6 +58,9 @@
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="ymdBox">
+      <HintPath>..\..\..\..\ymdBox.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Import Include="Microsoft.VisualBasic" />
@@ -144,6 +147,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="TopForm.resx">
       <DependentUpon>TopForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ハウス日誌.resx">
+      <DependentUpon>ハウス日誌.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="入居者登録.resx">
       <DependentUpon>入居者登録.vb</DependentUpon>
