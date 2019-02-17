@@ -31,10 +31,10 @@ Partial Class ハウス日誌
         Me.btnPrint = New System.Windows.Forms.Button()
         Me.rbtnYmd = New System.Windows.Forms.RadioButton()
         Me.rbtnYm = New System.Windows.Forms.RadioButton()
-        Me.PictureBox1 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox2 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox3 = New System.Windows.Forms.PictureBox()
-        Me.PictureBox4 = New System.Windows.Forms.PictureBox()
+        Me.sign1Box = New System.Windows.Forms.PictureBox()
+        Me.sign7Box = New System.Windows.Forms.PictureBox()
+        Me.sign9Box = New System.Windows.Forms.PictureBox()
+        Me.sign8Box = New System.Windows.Forms.PictureBox()
         Me.Label3 = New System.Windows.Forms.Label()
         Me.Label4 = New System.Windows.Forms.Label()
         Me.Label5 = New System.Windows.Forms.Label()
@@ -225,10 +225,10 @@ Partial Class ハウス日誌
         Me.Label67 = New System.Windows.Forms.Label()
         Me.Label68 = New System.Windows.Forms.Label()
         Me.Label69 = New System.Windows.Forms.Label()
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.sign1Box, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.sign7Box, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.sign9Box, System.ComponentModel.ISupportInitialize).BeginInit()
+        CType(Me.sign8Box, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvZen, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvRen, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvSakura, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -333,45 +333,45 @@ Partial Class ハウス日誌
         Me.rbtnYm.Text = "年月"
         Me.rbtnYm.UseVisualStyleBackColor = True
         '
-        'PictureBox1
+        'sign1Box
         '
-        Me.PictureBox1.BackColor = System.Drawing.Color.White
-        Me.PictureBox1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox1.Location = New System.Drawing.Point(819, 33)
-        Me.PictureBox1.Name = "PictureBox1"
-        Me.PictureBox1.Size = New System.Drawing.Size(39, 42)
-        Me.PictureBox1.TabIndex = 9
-        Me.PictureBox1.TabStop = False
+        Me.sign1Box.BackColor = System.Drawing.Color.White
+        Me.sign1Box.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sign1Box.Location = New System.Drawing.Point(819, 33)
+        Me.sign1Box.Name = "sign1Box"
+        Me.sign1Box.Size = New System.Drawing.Size(39, 42)
+        Me.sign1Box.TabIndex = 9
+        Me.sign1Box.TabStop = False
         '
-        'PictureBox2
+        'sign7Box
         '
-        Me.PictureBox2.BackColor = System.Drawing.Color.White
-        Me.PictureBox2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox2.Location = New System.Drawing.Point(861, 33)
-        Me.PictureBox2.Name = "PictureBox2"
-        Me.PictureBox2.Size = New System.Drawing.Size(39, 42)
-        Me.PictureBox2.TabIndex = 10
-        Me.PictureBox2.TabStop = False
+        Me.sign7Box.BackColor = System.Drawing.Color.White
+        Me.sign7Box.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sign7Box.Location = New System.Drawing.Point(861, 33)
+        Me.sign7Box.Name = "sign7Box"
+        Me.sign7Box.Size = New System.Drawing.Size(39, 42)
+        Me.sign7Box.TabIndex = 10
+        Me.sign7Box.TabStop = False
         '
-        'PictureBox3
+        'sign9Box
         '
-        Me.PictureBox3.BackColor = System.Drawing.Color.White
-        Me.PictureBox3.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox3.Location = New System.Drawing.Point(945, 33)
-        Me.PictureBox3.Name = "PictureBox3"
-        Me.PictureBox3.Size = New System.Drawing.Size(39, 42)
-        Me.PictureBox3.TabIndex = 12
-        Me.PictureBox3.TabStop = False
+        Me.sign9Box.BackColor = System.Drawing.Color.White
+        Me.sign9Box.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sign9Box.Location = New System.Drawing.Point(945, 33)
+        Me.sign9Box.Name = "sign9Box"
+        Me.sign9Box.Size = New System.Drawing.Size(39, 42)
+        Me.sign9Box.TabIndex = 12
+        Me.sign9Box.TabStop = False
         '
-        'PictureBox4
+        'sign8Box
         '
-        Me.PictureBox4.BackColor = System.Drawing.Color.White
-        Me.PictureBox4.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
-        Me.PictureBox4.Location = New System.Drawing.Point(903, 33)
-        Me.PictureBox4.Name = "PictureBox4"
-        Me.PictureBox4.Size = New System.Drawing.Size(39, 42)
-        Me.PictureBox4.TabIndex = 11
-        Me.PictureBox4.TabStop = False
+        Me.sign8Box.BackColor = System.Drawing.Color.White
+        Me.sign8Box.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle
+        Me.sign8Box.Location = New System.Drawing.Point(903, 33)
+        Me.sign8Box.Name = "sign8Box"
+        Me.sign8Box.Size = New System.Drawing.Size(39, 42)
+        Me.sign8Box.TabIndex = 11
+        Me.sign8Box.TabStop = False
         '
         'Label3
         '
@@ -2333,10 +2333,10 @@ Partial Class ハウス日誌
         Me.Controls.Add(Me.Label5)
         Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.PictureBox3)
-        Me.Controls.Add(Me.PictureBox4)
-        Me.Controls.Add(Me.PictureBox2)
-        Me.Controls.Add(Me.PictureBox1)
+        Me.Controls.Add(Me.sign9Box)
+        Me.Controls.Add(Me.sign8Box)
+        Me.Controls.Add(Me.sign7Box)
+        Me.Controls.Add(Me.sign1Box)
         Me.Controls.Add(Me.rbtnYm)
         Me.Controls.Add(Me.rbtnYmd)
         Me.Controls.Add(Me.btnPrint)
@@ -2348,10 +2348,10 @@ Partial Class ハウス日誌
         Me.Controls.Add(Me.YmdBox)
         Me.Name = "ハウス日誌"
         Me.Text = "生活支援ハウス業務日誌"
-        CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox3, System.ComponentModel.ISupportInitialize).EndInit()
-        CType(Me.PictureBox4, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.sign1Box, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.sign7Box, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.sign9Box, System.ComponentModel.ISupportInitialize).EndInit()
+        CType(Me.sign8Box, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvZen, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvRen, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.dgvSakura, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2380,10 +2380,10 @@ Partial Class ハウス日誌
     Friend WithEvents btnPrint As Button
     Friend WithEvents rbtnYmd As RadioButton
     Friend WithEvents rbtnYm As RadioButton
-    Friend WithEvents PictureBox1 As PictureBox
-    Friend WithEvents PictureBox2 As PictureBox
-    Friend WithEvents PictureBox3 As PictureBox
-    Friend WithEvents PictureBox4 As PictureBox
+    Friend WithEvents sign1Box As PictureBox
+    Friend WithEvents sign7Box As PictureBox
+    Friend WithEvents sign9Box As PictureBox
+    Friend WithEvents sign8Box As PictureBox
     Friend WithEvents Label3 As Label
     Friend WithEvents Label4 As Label
     Friend WithEvents Label5 As Label

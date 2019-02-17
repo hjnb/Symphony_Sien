@@ -2,6 +2,14 @@
 
 Public Class ハウス日誌
 
+    '時間入力チェックエラー
+    Private Const ERROR_HALF_NUMBER As Integer = 1
+    Private Const ERROR_HALF_NUMBER_MESSAGE As String = "時間は半角数字で入力して下さい。"
+    Private Const ERROR_24HOUR As Integer = 2
+    Private Const ERROR_24HOUR_MESSAGE As String = "時間は24時間制で入力して下さい。"
+    Private Const ERROR_CORRECT_TIME As Integer = 3
+    Private Const ERROR_CORRECT_TIME_MESSAGE As String = "時間を正しく入力して下さい。"
+
     'セルエンターイベント制御用
     Private canCellEnter As Boolean = False
 
@@ -167,6 +175,12 @@ Public Class ハウス日誌
     Private Sub clearInputContent()
         '天気
         weatherBox.Text = ""
+
+        '印影
+        sign1Box.ImageLocation = ""
+        sign7Box.ImageLocation = ""
+        sign8Box.ImageLocation = ""
+        sign9Box.ImageLocation = ""
 
         '全体dgv,連絡事項dgv内容クリア
         For Each dgv As DataGridView In {dgvZen, dgvRen}
@@ -357,5 +371,180 @@ Public Class ハウス日誌
                 e.Handled = True
             End If
         End If
+    End Sub
+
+    ''' <summary>
+    ''' 時間テキスト入力チェック
+    ''' </summary>
+    ''' <param name="inputTextBox"></param>
+    ''' <param name="boxType"></param>
+    ''' <returns></returns>
+    Private Function checkInputTime(inputTextBox As TextBox, boxType As String) As Integer
+        Dim result As Integer = -1 'エラー初期値
+        Dim inputText As String = inputTextBox.Text '入力テキスト
+        If inputText = "" Then
+            result = 0
+        ElseIf Not System.Text.RegularExpressions.Regex.IsMatch(inputText, "^\d+$") Then
+            result = ERROR_HALF_NUMBER
+        ElseIf boxType = "H" AndAlso CInt(inputText) >= 25 Then
+            result = ERROR_24HOUR
+        ElseIf boxType = "M" AndAlso CInt(inputText) >= 60 Then
+            result = ERROR_CORRECT_TIME
+        Else
+            result = 0
+        End If
+
+        If result <> 0 Then
+            inputTextBox.Focus()
+        End If
+
+        Return result
+    End Function
+
+    ''' <summary>
+    ''' 登録ボタンクリックイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub btnRegist_Click(sender As Object, e As EventArgs) Handles btnRegist.Click
+        '入力値チェック
+        For i As Integer = 1 To 12
+            Dim houseName As String = houseNumberDictionary(i)
+            For Each boxName As String In {"FrmH", "FrmM", "ToH", "ToM"}
+                Dim tb As TextBox = CType(Controls(houseName & boxName), TextBox)
+                Dim boxType As String = boxName.Substring(boxName.Length - 1, 1) 'H or M
+                Dim result As Integer = checkInputTime(tb, boxType)
+                If result = ERROR_HALF_NUMBER Then
+                    MsgBox(ERROR_HALF_NUMBER_MESSAGE, MsgBoxStyle.Exclamation)
+                    Return
+                ElseIf result = ERROR_24HOUR Then
+                    MsgBox(ERROR_24HOUR_MESSAGE, MsgBoxStyle.Exclamation)
+                    Return
+                ElseIf result = ERROR_CORRECT_TIME Then
+                    MsgBox(ERROR_CORRECT_TIME_MESSAGE, MsgBoxStyle.Exclamation)
+                    Return
+                End If
+            Next
+        Next
+
+        '既存データ削除
+        Dim ymd As String = YmdBox.getADStr() '日付
+        Dim cnn As New ADODB.Connection
+        cnn.Open(TopForm.DB_Sien)
+        Dim cmd As New ADODB.Command()
+        cmd.ActiveConnection = cnn
+        cmd.CommandText = "delete from House where Ymd='" & ymd & "'"
+        cmd.Execute()
+
+        '登録
+        Dim weather As String = weatherBox.Text '天気
+        Dim zen1 As String = dgvZen("Text", 0).Value '全体1行目
+        Dim zen2 As String = dgvZen("Text", 1).Value '全体2行目
+        Dim zen3 As String = dgvZen("Text", 2).Value '全体3行目
+        Dim zen4 As String = dgvZen("Text", 3).Value '全体4行目
+        Dim ren1 As String = dgvRen("Text", 0).Value '連絡事項1行目
+        Dim ren2 As String = dgvRen("Text", 1).Value '連絡事項2行目
+        Dim ren3 As String = dgvRen("Text", 2).Value '連絡事項3行目
+        Dim ren4 As String = dgvRen("Text", 3).Value '連絡事項4行目
+        Dim sign1 As String = System.IO.Path.GetFileNameWithoutExtension(sign1Box.ImageLocation) '施設長印影
+        Dim sign7 As String = System.IO.Path.GetFileNameWithoutExtension(sign7Box.ImageLocation) '援助員印影
+        Dim sign8 As String = System.IO.Path.GetFileNameWithoutExtension(sign8Box.ImageLocation) '宿直印影
+        Dim sign9 As String = System.IO.Path.GetFileNameWithoutExtension(sign9Box.ImageLocation) '合議印影
+        'Num=1の登録(天気、印影、全体、連絡事項と【さくら】の入力データ登録)
+        Dim rs As New ADODB.Recordset
+        rs.Open("House", cnn, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockOptimistic)
+        rs.AddNew()
+        rs.Fields("Tenki").Value = weather
+        rs.Fields("Sign1").Value = sign1
+        rs.Fields("Sign7").Value = sign7
+        rs.Fields("Sign8").Value = sign8
+        rs.Fields("Sign9").Value = sign9
+        rs.Fields("Zen1").Value = zen1
+        rs.Fields("Zen2").Value = zen2
+        rs.Fields("Zen3").Value = zen3
+        rs.Fields("Zen4").Value = zen4
+        rs.Fields("Ren1").Value = ren1
+        rs.Fields("Ren2").Value = ren2
+        rs.Fields("Ren3").Value = ren3
+        rs.Fields("Ren4").Value = ren4
+        rs.Fields("Num").Value = 1
+        rs.Fields("Ymd").Value = ymd
+        rs.Fields("Nam").Value = sakuraNam.Text
+        rs.Fields("Chk1").Value = If(sakuraChk1.Checked, 1, 0)
+        rs.Fields("Chk2").Value = If(sakuraChk2.Checked, 1, 0)
+        rs.Fields("Chk3").Value = If(sakuraChk3.Checked, 1, 0)
+        rs.Fields("Chk4").Value = If(sakuraChk4.Checked, 1, 0)
+        rs.Fields("Cbo").Value = sakuraCbo.Text
+        rs.Fields("FrmH").Value = sakuraFrmH.Text
+        rs.Fields("FrmM").Value = sakuraFrmM.Text
+        rs.Fields("ToH").Value = sakuraToH.Text
+        rs.Fields("ToM").Value = sakuraToM.Text
+        For i As Integer = 1 To 7
+            rs.Fields("Txt" & i).Value = dgvSakura("Text", i - 1).Value.ToString()
+        Next
+        'Num>=2以降の登録(【すいせん】～【ききょう】までの入力データ登録)
+        For i As Integer = 2 To 12
+            Dim houseName As String = houseNumberDictionary(i)
+            rs.AddNew()
+            rs.Fields("Num").Value = i
+            rs.Fields("Ymd").Value = ymd
+            rs.Fields("Nam").Value = CType(Controls(houseName & "Nam"), Label).Text
+            rs.Fields("Chk1").Value = If(CType(Controls(houseName & "Chk1"), CheckBox).Checked, 1, 0)
+            rs.Fields("Chk2").Value = If(CType(Controls(houseName & "Chk2"), CheckBox).Checked, 1, 0)
+            rs.Fields("Chk3").Value = If(CType(Controls(houseName & "Chk3"), CheckBox).Checked, 1, 0)
+            rs.Fields("Chk4").Value = If(CType(Controls(houseName & "Chk4"), CheckBox).Checked, 1, 0)
+            rs.Fields("Cbo").Value = CType(Controls(houseName & "Cbo"), ComboBox).Text
+            rs.Fields("FrmH").Value = CType(Controls(houseName & "FrmH"), TextBox).Text
+            rs.Fields("FrmM").Value = CType(Controls(houseName & "FrmM"), TextBox).Text
+            rs.Fields("ToH").Value = CType(Controls(houseName & "ToH"), TextBox).Text
+            rs.Fields("ToM").Value = CType(Controls(houseName & "ToM"), TextBox).Text
+            Dim dgv As DataGridView = CType(Controls("dgv" & houseName), DataGridView)
+            For j As Integer = 1 To 7
+                rs.Fields("Txt" & j).Value = dgv("Text", j - 1).Value.ToString()
+            Next
+        Next
+        rs.Update()
+        rs.Close()
+        cnn.Close()
+    End Sub
+
+    ''' <summary>
+    ''' 削除ボタンクリックイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub btnDelete_Click(sender As Object, e As EventArgs) Handles btnDelete.Click
+        Dim result As DialogResult = MessageBox.Show("対象日の日誌を削除しますか？", "削除", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+        If result = DialogResult.Yes Then
+            Dim ymd As String = YmdBox.getADStr() '日付
+            Dim cnn As New ADODB.Connection
+            cnn.Open(TopForm.DB_Sien)
+            Dim cmd As New ADODB.Command()
+            cmd.ActiveConnection = cnn
+            cmd.CommandText = "delete from House where Ymd='" & ymd & "'"
+            cmd.Execute()
+            cnn.Close()
+
+            '再表示
+            displayHouseData()
+        End If
+    End Sub
+
+    ''' <summary>
+    ''' 印刷ボタンクリックイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub btnPrint_Click(sender As Object, e As EventArgs) Handles btnPrint.Click
+
+    End Sub
+
+    ''' <summary>
+    ''' 押ボタンクリックイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub btnSealSet_Click(sender As Object, e As EventArgs) Handles btnSealSet.Click
+
     End Sub
 End Class
