@@ -250,8 +250,22 @@ Public Class ハウス日誌
                     Next
 
                     '印影部分
-                    '
-                    '
+                    Dim sign1SealPath As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign1").Value) & ".wmf"
+                    Dim sign7SealPath As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign7").Value) & ".wmf"
+                    Dim sign8SealPath As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign8").Value) & ".wmf"
+                    Dim sign9SealPath As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign9").Value) & ".wmf"
+                    If System.IO.File.Exists(sign1SealPath) Then
+                        sign1Box.ImageLocation = sign1SealPath
+                    End If
+                    If System.IO.File.Exists(sign7SealPath) Then
+                        sign7Box.ImageLocation = sign7SealPath
+                    End If
+                    If System.IO.File.Exists(sign8SealPath) Then
+                        sign8Box.ImageLocation = sign8SealPath
+                    End If
+                    If System.IO.File.Exists(sign9SealPath) Then
+                        sign9Box.ImageLocation = sign9SealPath
+                    End If
 
                 End If
 
@@ -545,6 +559,33 @@ Public Class ハウス日誌
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub btnSealSet_Click(sender As Object, e As EventArgs) Handles btnSealSet.Click
+        If btnSealSet.Text = "押" Then
+            If TopForm.className = "" AndAlso TopForm.sealFileName = "" Then
+                Dim passForm As 印鑑パスワード = New 印鑑パスワード(TopForm.DB_Journal)
+                If passForm.ShowDialog() <> Windows.Forms.DialogResult.OK Then
+                    Return
+                Else
+                    TopForm.className = passForm.getClassName()
+                    TopForm.sealFileName = passForm.getSealFileName()
+                End If
+            End If
 
+            Dim sealNum As Integer = If(IsNumeric(TopForm.className.Substring(0, 1)), CInt(TopForm.className.Substring(0, 1)), -1)
+            If sealNum = 1 OrElse sealNum = 7 OrElse sealNum = 8 OrElse sealNum = 9 Then
+                Dim sealFilePath As String = TopForm.sealBoxDirPath & "\" & TopForm.sealFileName & ".wmf"
+                If System.IO.File.Exists(sealFilePath) Then
+                    CType(Controls("sign" & sealNum & "Box"), PictureBox).ImageLocation = sealFilePath
+                End If
+            End If
+            btnSealSet.Text = "消"
+            btnSealSet.ForeColor = Color.Black
+        ElseIf btnSealSet.Text = "消" Then
+            Dim sealNum As Integer = If(IsNumeric(TopForm.className.Substring(0, 1)), CInt(TopForm.className.Substring(0, 1)), -1)
+            If sealNum = 1 OrElse sealNum = 7 OrElse sealNum = 8 OrElse sealNum = 9 Then
+                CType(Controls("sign" & sealNum & "Box"), PictureBox).ImageLocation = ""
+            End If
+            btnSealSet.Text = "押"
+            btnSealSet.ForeColor = Color.Red
+        End If
     End Sub
 End Class

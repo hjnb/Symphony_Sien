@@ -15,6 +15,10 @@
     'SealBoxフォルダパス
     Public sealBoxDirPath As String = Util.getIniString("System", "SealBoxDir", iniFilePath)
 
+    'Journalデータベースのパス
+    Public dbJournalFilePath As String = Util.getIniString("System", "DB2Dir", iniFilePath) & "\Journal.mdb"
+    Public DB_Journal As String = "Provider=Microsoft.Jet.OLEDB.4.0;Data Source=" & dbJournalFilePath
+
     '印鑑パス通過後保持用　職制
     Public className As String
 
