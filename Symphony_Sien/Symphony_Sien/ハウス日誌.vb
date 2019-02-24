@@ -607,6 +607,12 @@ Public Class ハウス日誌
             Return
         End If
 
+        '管理者パスワードフォーム表示
+        Dim passForm As passwordForm = New passwordForm(TopForm.iniFilePath, 3)
+        If passForm.ShowDialog() <> Windows.Forms.DialogResult.OK Then
+            Return
+        End If
+
         '必要ページ数
         Dim pageCount As Integer = 0
         Dim ymdTemp As String = ""
@@ -795,6 +801,8 @@ Public Class ハウス日誌
             End If
             rs.MoveNext()
         End While
+        rs.Close()
+        cnn.Close()
 
         '変更保存確認ダイアログ非表示
         objExcel.DisplayAlerts = False
