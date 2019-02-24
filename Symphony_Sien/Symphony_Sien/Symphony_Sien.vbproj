@@ -160,6 +160,9 @@
     <EmbeddedResource Include="居室登録.resx">
       <DependentUpon>居室登録.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="洗濯関係.resx">
+      <DependentUpon>洗濯関係.vb</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="My Project\Application.myapp">

@@ -444,5 +444,11 @@ Symphony_Sien
  <param name="sender"></param>
  <param name="e"></param>
 </member>
+<member name="T:Symphony_Sien.洗濯関係.dgvRowHeaderCell">
+ <summary>
+ 行ヘッダーのカレントセルを表す三角マークを非表示に設定する為のクラス。
+ </summary>
+ <remarks></remarks>
+</member>
 </members>
 </doc>
