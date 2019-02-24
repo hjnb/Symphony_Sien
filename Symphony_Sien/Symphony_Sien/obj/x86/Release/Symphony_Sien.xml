@@ -231,6 +231,14 @@ Symphony_Sien
  <param name="boxType"></param>
  <returns></returns>
 </member>
+<member name="M:Symphony_Sien.ハウス日誌.formatDateStr(System.String)">
+ <summary>
+ 和暦表記にフォーマット
+ </summary>
+ <param name="adStr"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
 <member name="M:Symphony_Sien.ハウス日誌.btnRegist_Click(System.Object,System.EventArgs)">
  <summary>
  登録ボタンクリックイベント
