@@ -1,5 +1,6 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Text
+Imports Microsoft.Office.Interop
 
 Public Class ハウス日誌
 
@@ -634,12 +635,14 @@ Public Class ハウス日誌
         Dim oSheet As Object = objWorkBook.Worksheets("1改")
 
         '必要ページ数コピペ
+        Const PAGE_RANGE As Integer = 110
         For i As Integer = 0 To pageCount - 2
-            oSheet.rows("1:111").copy(oSheet.Range("A" & (1 + 111 * (i + 1))))
+            oSheet.rows("1:" & PAGE_RANGE).copy(oSheet.Range("A" & (1 + PAGE_RANGE * (i + 1))))
+            oSheet.HpageBreaks.add(oSheet.Range("A" & (1 + PAGE_RANGE * (i + 1)))) '改ページ
         Next
 
         'データ作成、書き込み
-        Dim xlPictures As Object = oSheet.Pictures
+        Dim xlPictures As Excel.Pictures = DirectCast(oSheet.Pictures, Excel.Pictures)
         Dim currentPage As Integer = 0
         ymdTemp = Util.checkDBNullValue(rs.Fields("Ymd").Value)
         ymd = Util.checkDBNullValue(rs.Fields("Ymd").Value)
@@ -652,35 +655,35 @@ Public Class ハウス日誌
             Dim num As Integer = rs.Fields("Num").Value
             If num = 1 Then
                 '日付、天気
-                oSheet.range("B" & (9 + 111 * currentPage)).value = formatDateStr(ymd)
-                oSheet.range("AI" & (9 + 111 * currentPage)).value = Util.checkDBNullValue(rs.Fields("Tenki").Value)
+                oSheet.range("B" & (9 + PAGE_RANGE * currentPage)).value = formatDateStr(ymd)
+                oSheet.range("AI" & (9 + PAGE_RANGE * currentPage)).value = Util.checkDBNullValue(rs.Fields("Tenki").Value)
 
                 '印影部分
-                'Dim xlPicture As Object
-                'Dim sign1Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign1").Value) & ".wmf"
-                'Dim sign7Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign7").Value) & ".wmf"
-                'Dim sign8Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign8").Value) & ".wmf"
-                'Dim sign9Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign9").Value) & ".wmf"
-                'If System.IO.File.Exists(sign1Path) Then
-                '    xlPicture = xlPictures.Insert(sign1Path)
-                '    xlPicture.Left = oSheet.Cells(4 + (111 * currentPage), "AM").Left
-                '    xlPicture.Top = oSheet.Cells(4 + (111 * currentPage), "AM").Top
-                'End If
-                'If System.IO.File.Exists(sign7Path) Then
-                '    xlPicture = xlPictures.Insert(sign7Path)
-                '    xlPicture.Left = oSheet.Cells(4 + (111 * currentPage), "AR").Left
-                '    xlPicture.Top = oSheet.Cells(4 + (111 * currentPage), "AR").Top
-                'End If
-                'If System.IO.File.Exists(sign8Path) Then
-                '    xlPicture = xlPictures.Insert(sign8Path)
-                '    xlPicture.Left = oSheet.Cells(4 + (111 * currentPage), "AT").Left
-                '    xlPicture.Top = oSheet.Cells(4 + (111 * currentPage), "AT").Top
-                'End If
-                'If System.IO.File.Exists(sign9Path) Then
-                '    xlPicture = xlPictures.Insert(sign9Path)
-                '    xlPicture.Left = oSheet.Cells(4 + (111 * currentPage), "AV").Left
-                '    xlPicture.Top = oSheet.Cells(4 + (111 * currentPage), "AV").Top
-                'End If
+                Dim xlPicture As Excel.Picture
+                Dim sign1Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign1").Value) & ".wmf"
+                Dim sign7Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign7").Value) & ".wmf"
+                Dim sign8Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign8").Value) & ".wmf"
+                Dim sign9Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign9").Value) & ".wmf"
+                If System.IO.File.Exists(sign1Path) Then
+                    xlPicture = DirectCast(xlPictures.Insert(sign1Path), Excel.Picture)
+                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AM"), Excel.Range).Left
+                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AM"), Excel.Range).Top
+                End If
+                If System.IO.File.Exists(sign7Path) Then
+                    xlPicture = xlPictures.Insert(sign7Path)
+                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AR"), Excel.Range).Left
+                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AR"), Excel.Range).Top
+                End If
+                If System.IO.File.Exists(sign8Path) Then
+                    xlPicture = xlPictures.Insert(sign8Path)
+                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AT"), Excel.Range).Left
+                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AT"), Excel.Range).Top
+                End If
+                If System.IO.File.Exists(sign9Path) Then
+                    xlPicture = xlPictures.Insert(sign9Path)
+                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AV"), Excel.Range).Left
+                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AV"), Excel.Range).Top
+                End If
 
                 '全体、連絡事項部分
                 Dim zenArray(3, 0) As String
@@ -689,8 +692,8 @@ Public Class ハウス日誌
                     zenArray(i - 1, 0) = Util.checkDBNullValue(rs.Fields("Zen" & i).Value)
                     renArray(i - 1, 0) = Util.checkDBNullValue(rs.Fields("Ren" & i).Value)
                 Next
-                oSheet.range("C" & (12 + 111 * currentPage), "C" & (15 + 111 * currentPage)).value = zenArray
-                oSheet.range("C" & (106 + 111 * currentPage), "C" & (109 + 111 * currentPage)).value = renArray
+                oSheet.range("C" & (12 + PAGE_RANGE * currentPage), "C" & (15 + PAGE_RANGE * currentPage)).value = zenArray
+                oSheet.range("C" & (106 + PAGE_RANGE * currentPage), "C" & (109 + PAGE_RANGE * currentPage)).value = renArray
 
                 '【さくら】部分
                 Dim houseDataArray(12, 16) As String
@@ -719,7 +722,7 @@ Public Class ハウス日誌
                 houseDataArray(6, 16) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
                 houseDataArray(9, 16) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
                 houseDataArray(12, 16) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
-                oSheet.range("D" & (17 + 111 * currentPage), "T" & (29 + 111 * currentPage)).value = houseDataArray
+                oSheet.range("D" & (17 + PAGE_RANGE * currentPage), "T" & (29 + PAGE_RANGE * currentPage)).value = houseDataArray
             ElseIf 2 <= num AndAlso num <= 6 Then 'すいせん～なでしこ
                 Dim houseDataArray(12, 16) As String
                 houseDataArray(0, 1) = "【" & houseKanaNumberDictionary(num) & "】"
@@ -748,15 +751,15 @@ Public Class ハウス日誌
                 houseDataArray(9, 16) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
                 houseDataArray(12, 16) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
                 If num = 2 Then 'すいせん
-                    oSheet.range("D" & (32 + 111 * currentPage), "T" & (44 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("D" & (32 + PAGE_RANGE * currentPage), "T" & (44 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 3 Then 'あやめ
-                    oSheet.range("D" & (47 + 111 * currentPage), "T" & (59 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("D" & (47 + PAGE_RANGE * currentPage), "T" & (59 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 4 Then 'ふじ
-                    oSheet.range("D" & (62 + 111 * currentPage), "T" & (74 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("D" & (62 + PAGE_RANGE * currentPage), "T" & (74 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 5 Then 'あじさい
-                    oSheet.range("D" & (77 + 111 * currentPage), "T" & (89 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("D" & (77 + PAGE_RANGE * currentPage), "T" & (89 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 6 Then 'なでしこ
-                    oSheet.range("D" & (92 + 111 * currentPage), "T" & (104 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("D" & (92 + PAGE_RANGE * currentPage), "T" & (104 + PAGE_RANGE * currentPage)).value = houseDataArray
                 End If
             ElseIf 7 <= num AndAlso num <= 12 Then 'ぼたん～ききょう
                 Dim houseDataArray(12, 20) As String
@@ -786,17 +789,17 @@ Public Class ハウス日誌
                 houseDataArray(9, 20) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
                 houseDataArray(12, 20) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
                 If num = 7 Then 'ぼたん
-                    oSheet.range("V" & (17 + 111 * currentPage), "AP" & (29 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("V" & (17 + PAGE_RANGE * currentPage), "AP" & (29 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 8 Then 'ひまわり
-                    oSheet.range("V" & (32 + 111 * currentPage), "AP" & (44 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("V" & (32 + PAGE_RANGE * currentPage), "AP" & (44 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 9 Then 'はまなす
-                    oSheet.range("V" & (47 + 111 * currentPage), "AP" & (59 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("V" & (47 + PAGE_RANGE * currentPage), "AP" & (59 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 10 Then 'ゆり
-                    oSheet.range("V" & (62 + 111 * currentPage), "AP" & (74 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("V" & (62 + PAGE_RANGE * currentPage), "AP" & (74 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 11 Then 'やぐるま
-                    oSheet.range("V" & (77 + 111 * currentPage), "AP" & (89 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("V" & (77 + PAGE_RANGE * currentPage), "AP" & (89 + PAGE_RANGE * currentPage)).value = houseDataArray
                 ElseIf num = 12 Then 'ききょう
-                    oSheet.range("V" & (92 + 111 * currentPage), "AP" & (104 + 111 * currentPage)).value = houseDataArray
+                    oSheet.range("V" & (92 + PAGE_RANGE * currentPage), "AP" & (104 + PAGE_RANGE * currentPage)).value = houseDataArray
                 End If
             End If
             rs.MoveNext()
