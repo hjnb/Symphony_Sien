@@ -1,5 +1,6 @@
 ﻿Imports System.Runtime.InteropServices
 Imports System.Text
+Imports Microsoft.Office.Core
 Imports Microsoft.Office.Interop
 
 Public Class ハウス日誌
@@ -629,10 +630,10 @@ Public Class ハウス日誌
         rs.MoveFirst()
 
         'エクセル準備
-        Dim objExcel As Object = CreateObject("Excel.Application")
-        Dim objWorkBooks As Object = objExcel.Workbooks
-        Dim objWorkBook As Object = objWorkBooks.Open(TopForm.excelFilePass)
-        Dim oSheet As Object = objWorkBook.Worksheets("1改")
+        Dim objExcel As Excel.Application = CreateObject("Excel.Application")
+        Dim objWorkBooks As Excel.Workbooks = objExcel.Workbooks
+        Dim objWorkBook As Excel.Workbook = objWorkBooks.Open(TopForm.excelFilePass)
+        Dim oSheet As Excel.Worksheet = objWorkBook.Worksheets("1改")
 
         '必要ページ数コピペ
         Const PAGE_RANGE As Integer = 110
@@ -642,7 +643,7 @@ Public Class ハウス日誌
         Next
 
         'データ作成、書き込み
-        Dim xlPictures As Excel.Pictures = DirectCast(oSheet.Pictures, Excel.Pictures)
+        Dim xlShapes As Excel.Shapes = DirectCast(oSheet.Shapes, Excel.Shapes)
         Dim currentPage As Integer = 0
         ymdTemp = Util.checkDBNullValue(rs.Fields("Ymd").Value)
         ymd = Util.checkDBNullValue(rs.Fields("Ymd").Value)
@@ -655,34 +656,29 @@ Public Class ハウス日誌
             Dim num As Integer = rs.Fields("Num").Value
             If num = 1 Then
                 '日付、天気
-                oSheet.range("B" & (9 + PAGE_RANGE * currentPage)).value = formatDateStr(ymd)
-                oSheet.range("AI" & (9 + PAGE_RANGE * currentPage)).value = Util.checkDBNullValue(rs.Fields("Tenki").Value)
+                oSheet.Cells((9 + PAGE_RANGE * currentPage), "B").value = formatDateStr(ymd)
+                oSheet.Cells((9 + PAGE_RANGE * currentPage), "AI").value = Util.checkDBNullValue(rs.Fields("Tenki").Value)
 
                 '印影部分
-                Dim xlPicture As Excel.Picture
                 Dim sign1Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign1").Value) & ".wmf"
                 Dim sign7Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign7").Value) & ".wmf"
                 Dim sign8Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign8").Value) & ".wmf"
                 Dim sign9Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign9").Value) & ".wmf"
                 If System.IO.File.Exists(sign1Path) Then
-                    xlPicture = DirectCast(xlPictures.Insert(sign1Path), Excel.Picture)
-                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AM"), Excel.Range).Left
-                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AM"), Excel.Range).Top
+                    Dim cell As Excel.Range = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AM"), Excel.Range)
+                    xlShapes.AddPicture(sign1Path, False, True, cell.Left, cell.Top, 30, 30)
                 End If
                 If System.IO.File.Exists(sign7Path) Then
-                    xlPicture = xlPictures.Insert(sign7Path)
-                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AR"), Excel.Range).Left
-                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AR"), Excel.Range).Top
+                    Dim cell As Excel.Range = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AR"), Excel.Range)
+                    xlShapes.AddPicture(sign7Path, False, True, cell.Left, cell.Top, 30, 30)
                 End If
                 If System.IO.File.Exists(sign8Path) Then
-                    xlPicture = xlPictures.Insert(sign8Path)
-                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AT"), Excel.Range).Left
-                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AT"), Excel.Range).Top
+                    Dim cell As Excel.Range = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AT"), Excel.Range)
+                    xlShapes.AddPicture(sign8Path, False, True, cell.Left, cell.Top, 30, 30)
                 End If
                 If System.IO.File.Exists(sign9Path) Then
-                    xlPicture = xlPictures.Insert(sign9Path)
-                    xlPicture.Left = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AV"), Excel.Range).Left
-                    xlPicture.Top = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AV"), Excel.Range).Top
+                    Dim cell As Excel.Range = DirectCast(oSheet.Cells(4 + (PAGE_RANGE * currentPage), "AV"), Excel.Range)
+                    xlShapes.AddPicture(sign9Path, False, True, cell.Left, cell.Top, 30, 30)
                 End If
 
                 '全体、連絡事項部分

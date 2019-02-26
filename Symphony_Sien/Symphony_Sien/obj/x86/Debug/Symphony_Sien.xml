@@ -231,6 +231,14 @@ Symphony_Sien
  <param name="boxType"></param>
  <returns></returns>
 </member>
+<member name="M:Symphony_Sien.ハウス日誌.formatDateStr(System.String)">
+ <summary>
+ 和暦表記にフォーマット
+ </summary>
+ <param name="adStr"></param>
+ <returns></returns>
+ <remarks></remarks>
+</member>
 <member name="M:Symphony_Sien.ハウス日誌.btnRegist_Click(System.Object,System.EventArgs)">
  <summary>
  登録ボタンクリックイベント
@@ -435,6 +443,12 @@ Symphony_Sien
  </summary>
  <param name="sender"></param>
  <param name="e"></param>
+</member>
+<member name="T:Symphony_Sien.洗濯関係.dgvRowHeaderCell">
+ <summary>
+ 行ヘッダーのカレントセルを表す三角マークを非表示に設定する為のクラス。
+ </summary>
+ <remarks></remarks>
 </member>
 </members>
 </doc>
