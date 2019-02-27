@@ -635,6 +635,9 @@ Public Class ハウス日誌
         Dim objWorkBook As Excel.Workbook = objWorkBooks.Open(TopForm.excelFilePass)
         Dim oSheet As Excel.Worksheet = objWorkBook.Worksheets("1改")
 
+        objExcel.Calculation = Excel.XlCalculation.xlCalculationManual
+        objExcel.ScreenUpdating = False
+
         '必要ページ数コピペ
         Const PAGE_RANGE As Integer = 110
         For i As Integer = 0 To pageCount - 2
@@ -643,6 +646,7 @@ Public Class ハウス日誌
         Next
 
         'データ作成、書き込み
+        Dim pageDataArray(100, 39) As String
         Dim xlShapes As Excel.Shapes = DirectCast(oSheet.Shapes, Excel.Shapes)
         Dim currentPage As Integer = 0
         ymdTemp = Util.checkDBNullValue(rs.Fields("Ymd").Value)
@@ -650,14 +654,22 @@ Public Class ハウス日誌
         While Not rs.EOF
             ymd = Util.checkDBNullValue(rs.Fields("Ymd").Value)
             If ymd <> ymdTemp Then
+                '現在のページにデータ貼り付け
+                oSheet.Range("C" & (9 + PAGE_RANGE * currentPage), "AP" & (109 + PAGE_RANGE * currentPage)).Value = pageDataArray
+
+                '配列クリア
+                Array.Clear(pageDataArray, 0, pageDataArray.Length)
+
                 currentPage += 1
                 ymdTemp = ymd
             End If
             Dim num As Integer = rs.Fields("Num").Value
             If num = 1 Then
                 '日付、天気
-                oSheet.Cells((9 + PAGE_RANGE * currentPage), "B").value = formatDateStr(ymd)
-                oSheet.Cells((9 + PAGE_RANGE * currentPage), "AI").value = Util.checkDBNullValue(rs.Fields("Tenki").Value)
+                pageDataArray(0, 0) = formatDateStr(ymd)
+                pageDataArray(0, 23) = "天気"
+                pageDataArray(0, 30) = "/"
+                pageDataArray(0, 32) = Util.checkDBNullValue(rs.Fields("Tenki").Value)
 
                 '印影部分
                 Dim sign1Path As String = TopForm.sealBoxDirPath & "\" & Util.checkDBNullValue(rs.Fields("Sign1").Value) & ".wmf"
@@ -682,126 +694,102 @@ Public Class ハウス日誌
                 End If
 
                 '全体、連絡事項部分
-                Dim zenArray(3, 0) As String
-                Dim renArray(3, 0) As String
                 For i As Integer = 1 To 4
-                    zenArray(i - 1, 0) = Util.checkDBNullValue(rs.Fields("Zen" & i).Value)
-                    renArray(i - 1, 0) = Util.checkDBNullValue(rs.Fields("Ren" & i).Value)
+                    pageDataArray(i - 1 + 3, 0) = Util.checkDBNullValue(rs.Fields("Zen" & i).Value)
+                    pageDataArray(i - 1 + 97, 0) = Util.checkDBNullValue(rs.Fields("Ren" & i).Value)
                 Next
-                oSheet.range("C" & (12 + PAGE_RANGE * currentPage), "C" & (15 + PAGE_RANGE * currentPage)).value = zenArray
-                oSheet.range("C" & (106 + PAGE_RANGE * currentPage), "C" & (109 + PAGE_RANGE * currentPage)).value = renArray
 
                 '【さくら】部分
-                Dim houseDataArray(12, 16) As String
-                houseDataArray(0, 1) = "【さくら】"
-                houseDataArray(1, 0) = Util.checkDBNullValue(rs.Fields("Nam").Value)
-                houseDataArray(4, 1) = If(rs.Fields("Chk1").Value = 1, "✔", "")
-                houseDataArray(3, 3) = "入浴"
-                houseDataArray(4, 5) = If(rs.Fields("Chk2").Value = 1, "✔", "")
-                houseDataArray(3, 8) = "外泊"
-                houseDataArray(4, 11) = If(rs.Fields("Chk3").Value = 1, "✔", "")
-                houseDataArray(3, 13) = "入院"
-                houseDataArray(7, 1) = If(rs.Fields("Chk4").Value = 1, "✔", "")
-                houseDataArray(6, 3) = "外出"
-                houseDataArray(6, 4) = "〔"
-                houseDataArray(6, 6) = Util.checkDBNullValue(rs.Fields("Cbo").Value)
-                houseDataArray(6, 14) = "〕"
-                houseDataArray(9, 4) = "〔"
-                houseDataArray(9, 6) = Util.checkDBNullValue(rs.Fields("FrmH").Value) & ":" & Util.checkDBNullValue(rs.Fields("FrmM").Value)
-                houseDataArray(9, 9) = "～"
-                houseDataArray(9, 11) = Util.checkDBNullValue(rs.Fields("ToH").Value) & ":" & Util.checkDBNullValue(rs.Fields("ToM").Value)
-                houseDataArray(9, 14) = "〕"
-                houseDataArray(0, 16) = Util.checkDBNullValue(rs.Fields("Txt1").Value)
-                houseDataArray(1, 16) = Util.checkDBNullValue(rs.Fields("Txt2").Value)
-                houseDataArray(2, 16) = Util.checkDBNullValue(rs.Fields("Txt3").Value)
-                houseDataArray(3, 16) = Util.checkDBNullValue(rs.Fields("Txt4").Value)
-                houseDataArray(6, 16) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
-                houseDataArray(9, 16) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
-                houseDataArray(12, 16) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
-                oSheet.range("D" & (17 + PAGE_RANGE * currentPage), "T" & (29 + PAGE_RANGE * currentPage)).value = houseDataArray
+                pageDataArray(8, 2) = "【さくら】"
+                pageDataArray(9, 1) = Util.checkDBNullValue(rs.Fields("Nam").Value)
+                pageDataArray(12, 2) = If(rs.Fields("Chk1").Value = 1, "✔", "")
+                pageDataArray(11, 4) = "入浴"
+                pageDataArray(12, 6) = If(rs.Fields("Chk2").Value = 1, "✔", "")
+                pageDataArray(11, 9) = "外泊"
+                pageDataArray(12, 12) = If(rs.Fields("Chk3").Value = 1, "✔", "")
+                pageDataArray(11, 14) = "入院"
+                pageDataArray(15, 2) = If(rs.Fields("Chk4").Value = 1, "✔", "")
+                pageDataArray(14, 4) = "外出"
+                pageDataArray(14, 5) = "〔"
+                pageDataArray(14, 7) = Util.checkDBNullValue(rs.Fields("Cbo").Value)
+                pageDataArray(14, 15) = "〕"
+                pageDataArray(17, 5) = "〔"
+                pageDataArray(17, 7) = Util.checkDBNullValue(rs.Fields("FrmH").Value) & ":" & Util.checkDBNullValue(rs.Fields("FrmM").Value)
+                pageDataArray(17, 10) = "～"
+                pageDataArray(17, 12) = Util.checkDBNullValue(rs.Fields("ToH").Value) & ":" & Util.checkDBNullValue(rs.Fields("ToM").Value)
+                pageDataArray(17, 15) = "〕"
+                pageDataArray(8, 17) = Util.checkDBNullValue(rs.Fields("Txt1").Value)
+                pageDataArray(9, 17) = Util.checkDBNullValue(rs.Fields("Txt2").Value)
+                pageDataArray(10, 17) = Util.checkDBNullValue(rs.Fields("Txt3").Value)
+                pageDataArray(11, 17) = Util.checkDBNullValue(rs.Fields("Txt4").Value)
+                pageDataArray(14, 17) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
+                pageDataArray(17, 17) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
+                pageDataArray(20, 17) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
             ElseIf 2 <= num AndAlso num <= 6 Then 'すいせん～なでしこ
-                Dim houseDataArray(12, 16) As String
-                houseDataArray(0, 1) = "【" & houseKanaNumberDictionary(num) & "】"
-                houseDataArray(1, 0) = Util.checkDBNullValue(rs.Fields("Nam").Value)
-                houseDataArray(4, 1) = If(rs.Fields("Chk1").Value = 1, "✔", "")
-                houseDataArray(3, 3) = "入浴"
-                houseDataArray(4, 5) = If(rs.Fields("Chk2").Value = 1, "✔", "")
-                houseDataArray(3, 8) = "外泊"
-                houseDataArray(4, 11) = If(rs.Fields("Chk3").Value = 1, "✔", "")
-                houseDataArray(3, 13) = "入院"
-                houseDataArray(7, 1) = If(rs.Fields("Chk4").Value = 1, "✔", "")
-                houseDataArray(6, 3) = "外出"
-                houseDataArray(6, 4) = "〔"
-                houseDataArray(6, 6) = Util.checkDBNullValue(rs.Fields("Cbo").Value)
-                houseDataArray(6, 14) = "〕"
-                houseDataArray(9, 4) = "〔"
-                houseDataArray(9, 6) = Util.checkDBNullValue(rs.Fields("FrmH").Value) & ":" & Util.checkDBNullValue(rs.Fields("FrmM").Value)
-                houseDataArray(9, 9) = "～"
-                houseDataArray(9, 11) = Util.checkDBNullValue(rs.Fields("ToH").Value) & ":" & Util.checkDBNullValue(rs.Fields("ToM").Value)
-                houseDataArray(9, 14) = "〕"
-                houseDataArray(0, 16) = Util.checkDBNullValue(rs.Fields("Txt1").Value)
-                houseDataArray(1, 16) = Util.checkDBNullValue(rs.Fields("Txt2").Value)
-                houseDataArray(2, 16) = Util.checkDBNullValue(rs.Fields("Txt3").Value)
-                houseDataArray(3, 16) = Util.checkDBNullValue(rs.Fields("Txt4").Value)
-                houseDataArray(6, 16) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
-                houseDataArray(9, 16) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
-                houseDataArray(12, 16) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
-                If num = 2 Then 'すいせん
-                    oSheet.range("D" & (32 + PAGE_RANGE * currentPage), "T" & (44 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 3 Then 'あやめ
-                    oSheet.range("D" & (47 + PAGE_RANGE * currentPage), "T" & (59 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 4 Then 'ふじ
-                    oSheet.range("D" & (62 + PAGE_RANGE * currentPage), "T" & (74 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 5 Then 'あじさい
-                    oSheet.range("D" & (77 + PAGE_RANGE * currentPage), "T" & (89 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 6 Then 'なでしこ
-                    oSheet.range("D" & (92 + PAGE_RANGE * currentPage), "T" & (104 + PAGE_RANGE * currentPage)).value = houseDataArray
-                End If
+                Dim plusRowNum As Integer = 15 * (num - 1)
+                pageDataArray(8 + plusRowNum, 2) = "【" & houseKanaNumberDictionary(num) & "】"
+                pageDataArray(9 + plusRowNum, 1) = Util.checkDBNullValue(rs.Fields("Nam").Value)
+                pageDataArray(12 + plusRowNum, 2) = If(rs.Fields("Chk1").Value = 1, "✔", "")
+                pageDataArray(11 + plusRowNum, 4) = "入浴"
+                pageDataArray(12 + plusRowNum, 6) = If(rs.Fields("Chk2").Value = 1, "✔", "")
+                pageDataArray(11 + plusRowNum, 9) = "外泊"
+                pageDataArray(12 + plusRowNum, 12) = If(rs.Fields("Chk3").Value = 1, "✔", "")
+                pageDataArray(11 + plusRowNum, 14) = "入院"
+                pageDataArray(15 + plusRowNum, 2) = If(rs.Fields("Chk4").Value = 1, "✔", "")
+                pageDataArray(14 + plusRowNum, 4) = "外出"
+                pageDataArray(14 + plusRowNum, 5) = "〔"
+                pageDataArray(14 + plusRowNum, 7) = Util.checkDBNullValue(rs.Fields("Cbo").Value)
+                pageDataArray(14 + plusRowNum, 15) = "〕"
+                pageDataArray(17 + plusRowNum, 5) = "〔"
+                pageDataArray(17 + plusRowNum, 7) = Util.checkDBNullValue(rs.Fields("FrmH").Value) & ":" & Util.checkDBNullValue(rs.Fields("FrmM").Value)
+                pageDataArray(17 + plusRowNum, 10) = "～"
+                pageDataArray(17 + plusRowNum, 12) = Util.checkDBNullValue(rs.Fields("ToH").Value) & ":" & Util.checkDBNullValue(rs.Fields("ToM").Value)
+                pageDataArray(17 + plusRowNum, 15) = "〕"
+                pageDataArray(8 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt1").Value)
+                pageDataArray(9 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt2").Value)
+                pageDataArray(10 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt3").Value)
+                pageDataArray(11 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt4").Value)
+                pageDataArray(14 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
+                pageDataArray(17 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
+                pageDataArray(20 + plusRowNum, 17) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
             ElseIf 7 <= num AndAlso num <= 12 Then 'ぼたん～ききょう
-                Dim houseDataArray(12, 20) As String
-                houseDataArray(0, 1) = "【" & houseKanaNumberDictionary(num) & "】"
-                houseDataArray(1, 0) = Util.checkDBNullValue(rs.Fields("Nam").Value)
-                houseDataArray(4, 1) = If(rs.Fields("Chk1").Value = 1, "✔", "")
-                houseDataArray(3, 3) = "入浴"
-                houseDataArray(4, 5) = If(rs.Fields("Chk2").Value = 1, "✔", "")
-                houseDataArray(3, 8) = "外泊"
-                houseDataArray(4, 13) = If(rs.Fields("Chk3").Value = 1, "✔", "")
-                houseDataArray(3, 15) = "入院"
-                houseDataArray(7, 1) = If(rs.Fields("Chk4").Value = 1, "✔", "")
-                houseDataArray(6, 3) = "外出"
-                houseDataArray(6, 4) = "〔"
-                houseDataArray(6, 6) = Util.checkDBNullValue(rs.Fields("Cbo").Value)
-                houseDataArray(6, 18) = "〕"
-                houseDataArray(9, 4) = "〔"
-                houseDataArray(9, 6) = Util.checkDBNullValue(rs.Fields("FrmH").Value) & ":" & Util.checkDBNullValue(rs.Fields("FrmM").Value)
-                houseDataArray(9, 11) = "～"
-                houseDataArray(9, 13) = Util.checkDBNullValue(rs.Fields("ToH").Value) & ":" & Util.checkDBNullValue(rs.Fields("ToM").Value)
-                houseDataArray(9, 18) = "〕"
-                houseDataArray(0, 20) = Util.checkDBNullValue(rs.Fields("Txt1").Value)
-                houseDataArray(1, 20) = Util.checkDBNullValue(rs.Fields("Txt2").Value)
-                houseDataArray(2, 20) = Util.checkDBNullValue(rs.Fields("Txt3").Value)
-                houseDataArray(3, 20) = Util.checkDBNullValue(rs.Fields("Txt4").Value)
-                houseDataArray(6, 20) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
-                houseDataArray(9, 20) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
-                houseDataArray(12, 20) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
-                If num = 7 Then 'ぼたん
-                    oSheet.range("V" & (17 + PAGE_RANGE * currentPage), "AP" & (29 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 8 Then 'ひまわり
-                    oSheet.range("V" & (32 + PAGE_RANGE * currentPage), "AP" & (44 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 9 Then 'はまなす
-                    oSheet.range("V" & (47 + PAGE_RANGE * currentPage), "AP" & (59 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 10 Then 'ゆり
-                    oSheet.range("V" & (62 + PAGE_RANGE * currentPage), "AP" & (74 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 11 Then 'やぐるま
-                    oSheet.range("V" & (77 + PAGE_RANGE * currentPage), "AP" & (89 + PAGE_RANGE * currentPage)).value = houseDataArray
-                ElseIf num = 12 Then 'ききょう
-                    oSheet.range("V" & (92 + PAGE_RANGE * currentPage), "AP" & (104 + PAGE_RANGE * currentPage)).value = houseDataArray
-                End If
+                Dim plusRowNum As Integer = 15 * (num - 7)
+                pageDataArray(8 + plusRowNum, 20) = "【" & houseKanaNumberDictionary(num) & "】"
+                pageDataArray(9 + plusRowNum, 19) = Util.checkDBNullValue(rs.Fields("Nam").Value)
+                pageDataArray(12 + plusRowNum, 20) = If(rs.Fields("Chk1").Value = 1, "✔", "")
+                pageDataArray(11 + plusRowNum, 22) = "入浴"
+                pageDataArray(12 + plusRowNum, 24) = If(rs.Fields("Chk2").Value = 1, "✔", "")
+                pageDataArray(11 + plusRowNum, 27) = "外泊"
+                pageDataArray(12 + plusRowNum, 32) = If(rs.Fields("Chk3").Value = 1, "✔", "")
+                pageDataArray(11 + plusRowNum, 34) = "入院"
+                pageDataArray(15 + plusRowNum, 20) = If(rs.Fields("Chk4").Value = 1, "✔", "")
+                pageDataArray(14 + plusRowNum, 22) = "外出"
+                pageDataArray(14 + plusRowNum, 23) = "〔"
+                pageDataArray(14 + plusRowNum, 25) = Util.checkDBNullValue(rs.Fields("Cbo").Value)
+                pageDataArray(14 + plusRowNum, 37) = "〕"
+                pageDataArray(17 + plusRowNum, 23) = "〔"
+                pageDataArray(17 + plusRowNum, 25) = Util.checkDBNullValue(rs.Fields("FrmH").Value) & ":" & Util.checkDBNullValue(rs.Fields("FrmM").Value)
+                pageDataArray(17 + plusRowNum, 30) = "～"
+                pageDataArray(17 + plusRowNum, 32) = Util.checkDBNullValue(rs.Fields("ToH").Value) & ":" & Util.checkDBNullValue(rs.Fields("ToM").Value)
+                pageDataArray(17 + plusRowNum, 37) = "〕"
+                pageDataArray(8 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt1").Value)
+                pageDataArray(9 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt2").Value)
+                pageDataArray(10 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt3").Value)
+                pageDataArray(11 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt4").Value)
+                pageDataArray(14 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt5").Value)
+                pageDataArray(17 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt6").Value)
+                pageDataArray(20 + plusRowNum, 39) = Util.checkDBNullValue(rs.Fields("Txt7").Value)
             End If
             rs.MoveNext()
         End While
+        '現在のページにデータ貼り付け
+        oSheet.Range("C" & (9 + PAGE_RANGE * currentPage), "AP" & (109 + PAGE_RANGE * currentPage)).Value = pageDataArray
+
         rs.Close()
         cnn.Close()
+
+        objExcel.Calculation = Excel.XlCalculation.xlCalculationAutomatic
+        objExcel.ScreenUpdating = True
 
         '変更保存確認ダイアログ非表示
         objExcel.DisplayAlerts = False
