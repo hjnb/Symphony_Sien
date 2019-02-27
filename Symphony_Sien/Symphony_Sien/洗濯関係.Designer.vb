@@ -76,6 +76,7 @@ Partial Class 洗濯関係
         'rbtnWashList
         '
         Me.rbtnWashList.AutoSize = True
+        Me.rbtnWashList.Checked = True
         Me.rbtnWashList.Location = New System.Drawing.Point(295, 308)
         Me.rbtnWashList.Name = "rbtnWashList"
         Me.rbtnWashList.Size = New System.Drawing.Size(95, 16)
@@ -98,26 +99,26 @@ Partial Class 洗濯関係
         'dgvSisetu
         '
         Me.dgvSisetu.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvSisetu.Location = New System.Drawing.Point(433, 31)
+        Me.dgvSisetu.Location = New System.Drawing.Point(430, 31)
         Me.dgvSisetu.Name = "dgvSisetu"
         Me.dgvSisetu.RowTemplate.Height = 21
-        Me.dgvSisetu.Size = New System.Drawing.Size(94, 328)
+        Me.dgvSisetu.Size = New System.Drawing.Size(110, 340)
         Me.dgvSisetu.TabIndex = 6
         '
         'dgvSibutu
         '
         Me.dgvSibutu.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.dgvSibutu.Location = New System.Drawing.Point(538, 31)
+        Me.dgvSibutu.Location = New System.Drawing.Point(551, 31)
         Me.dgvSibutu.Name = "dgvSibutu"
         Me.dgvSibutu.RowTemplate.Height = 21
-        Me.dgvSibutu.Size = New System.Drawing.Size(94, 263)
+        Me.dgvSibutu.Size = New System.Drawing.Size(110, 276)
         Me.dgvSibutu.TabIndex = 7
         '
         '洗濯関係
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(650, 379)
+        Me.ClientSize = New System.Drawing.Size(680, 394)
         Me.Controls.Add(Me.dgvSibutu)
         Me.Controls.Add(Me.dgvSisetu)
         Me.Controls.Add(Me.rbtnType)

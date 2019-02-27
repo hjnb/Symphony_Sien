@@ -3,7 +3,10 @@
     'ﾕﾆｯﾄ配列
     Private unitArray() As String = {"森", "星", "空", "花", "月", "虹", "光", "丘", "風", "雪"}
 
-    '
+    'ﾕﾆｯﾄ名番号対応
+    Private unitNumDictionary As New Dictionary(Of String, Integer) From {{"森", 0}, {"星", 1}, {"空", 2}, {"花", 3}, {"月", 4}, {"虹", 5}, {"光", 6}, {"丘", 7}, {"風", 8}, {"雪", 9}}
+
+    'チェックボックス列チェック制御用フラグ
     Private cellValueChangeFlg As Boolean = False
 
     ''' <summary>
@@ -29,6 +32,9 @@
 
     End Class
 
+    ''' <summary>
+    ''' コンストラクタ
+    ''' </summary>
     Public Sub New()
         InitializeComponent()
 
@@ -36,9 +42,16 @@
         Me.FormBorderStyle = FormBorderStyle.FixedSingle
     End Sub
 
+    ''' <summary>
+    ''' loadイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
     Private Sub 洗濯関係_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
+        'データグリッドビュー初期化
         initDgvNam()
+        initDgvSisetu()
+        initDgvSibutu()
 
         'ﾕﾆｯﾄ配列セット
         unitListBox.Items.AddRange(unitArray)
@@ -65,9 +78,12 @@
             .RowHeadersWidth = 25
             .EnableHeadersVisualStyles = False
             .BackgroundColor = Color.FromKnownColor(KnownColor.Control)
+            .DefaultCellStyle.SelectionBackColor = Color.White
+            .DefaultCellStyle.SelectionForeColor = Color.Black
             .RowTemplate.HeaderCell = New dgvRowHeaderCell() '行ヘッダの三角マークを非表示に
             .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
             .ShowCellToolTips = False
+            .ImeMode = ImeMode.Hiragana
         End With
 
         '空行追加
@@ -88,7 +104,7 @@
         With dgvResident
             With .Columns("Check")
                 .HeaderText = "ワ"
-                .Width = 23
+                .Width = 20
                 .SortMode = DataGridViewColumnSortMode.NotSortable
                 .DefaultCellStyle.BackColor = Color.White
                 .DefaultCellStyle.SelectionBackColor = Color.White
@@ -96,7 +112,7 @@
 
             With .Columns("Nam")
                 .HeaderText = "氏名"
-                .Width = 105
+                .Width = 107
                 .SortMode = DataGridViewColumnSortMode.NotSortable
             End With
 
@@ -111,6 +127,118 @@
 
         dgvResident.CurrentCell.Selected = False
 
+    End Sub
+
+    Private Sub initDgvSisetu()
+        Util.EnableDoubleBuffering(dgvSisetu)
+
+        With dgvSisetu
+            .AllowUserToAddRows = False '行追加禁止
+            .AllowUserToResizeColumns = False '列の幅をユーザーが変更できないようにする
+            .AllowUserToResizeRows = False '行の高さをユーザーが変更できないようにする
+            .AllowUserToDeleteRows = False '行削除禁止
+            .SelectionMode = DataGridViewSelectionMode.CellSelect
+            .MultiSelect = False
+            .BorderStyle = BorderStyle.None
+            .RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+            .ColumnHeadersHeight = 20
+            .RowHeadersVisible = False
+            .RowTemplate.Height = 15
+            .EnableHeadersVisualStyles = False
+            .BackgroundColor = Color.FromKnownColor(KnownColor.Control)
+            .DefaultCellStyle.SelectionBackColor = Color.White
+            .DefaultCellStyle.SelectionForeColor = Color.Black
+            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .ShowCellToolTips = False
+            .ImeMode = ImeMode.Hiragana
+        End With
+
+        '空行追加
+        Dim dt As New DataTable()
+        dt.Columns.Add("Text", GetType(String))
+        For i = 0 To 20
+            Dim row As DataRow = dt.NewRow()
+            row(0) = ""
+            dt.Rows.Add(row)
+        Next
+        dgvSisetu.DataSource = dt
+
+        '幅設定等
+        With dgvSisetu
+            With .Columns("Text")
+                .HeaderText = "施設"
+                .Width = 105
+                .SortMode = DataGridViewColumnSortMode.NotSortable
+            End With
+        End With
+
+        dgvSisetu.CurrentCell.Selected = False
+
+    End Sub
+
+    Private Sub initDgvSibutu()
+        Util.EnableDoubleBuffering(dgvSibutu)
+
+        With dgvSibutu
+            .AllowUserToAddRows = False '行追加禁止
+            .AllowUserToResizeColumns = False '列の幅をユーザーが変更できないようにする
+            .AllowUserToResizeRows = False '行の高さをユーザーが変更できないようにする
+            .AllowUserToDeleteRows = False '行削除禁止
+            .SelectionMode = DataGridViewSelectionMode.CellSelect
+            .MultiSelect = False
+            .BorderStyle = BorderStyle.None
+            .RowHeadersWidthSizeMode = DataGridViewRowHeadersWidthSizeMode.DisableResizing
+            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.DisableResizing
+            .ColumnHeadersHeight = 20
+            .RowHeadersVisible = False
+            .RowTemplate.Height = 15
+            .EnableHeadersVisualStyles = False
+            .BackgroundColor = Color.FromKnownColor(KnownColor.Control)
+            .DefaultCellStyle.SelectionBackColor = Color.White
+            .DefaultCellStyle.SelectionForeColor = Color.Black
+            .ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            .ShowCellToolTips = False
+            .ImeMode = ImeMode.Hiragana
+        End With
+
+        '空行追加
+        Dim dt As New DataTable()
+        dt.Columns.Add("Text", GetType(String))
+        For i = 0 To 16
+            Dim row As DataRow = dt.NewRow()
+            row(0) = ""
+            dt.Rows.Add(row)
+        Next
+        dgvSibutu.DataSource = dt
+
+        '幅設定等
+        With dgvSibutu
+            With .Columns("Text")
+                .HeaderText = "私物"
+                .Width = 105
+                .SortMode = DataGridViewColumnSortMode.NotSortable
+            End With
+        End With
+
+        dgvSibutu.CurrentCell.Selected = False
+
+    End Sub
+
+    Private Sub displayUnitData(unitName As String)
+        'If Not unitNumDictionary.ContainsKey(unitName) Then
+        '    Return
+        'End If
+        'Dim gyo As Integer = unitNumDictionary(unitName)
+        'Dim cnn As New ADODB.Connection
+        'Dim rs As New ADODB.Recordset
+        'Dim sql As String = "select * from Wash where Gyo=" & gyo & ""
+        'cnn.Open(TopForm.DB_Sien)
+        'rs.Open(sql, cnn, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockReadOnly)
+
+
+        'rs.Close()
+        'cnn.Close()
     End Sub
 
     Private Sub dgvResident_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvResident.CellPainting
@@ -135,8 +263,9 @@
         End If
     End Sub
 
-    Private Sub dgvResident_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvResident.CellEnter
-        dgvResident.BeginEdit(False)
+    Private Sub dgv_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvResident.CellEnter, dgvSisetu.CellEnter, dgvSibutu.CellEnter
+        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+        dgv.BeginEdit(False)
     End Sub
 
     Private Sub dgvResident_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvResident.CellValueChanged

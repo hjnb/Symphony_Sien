@@ -450,5 +450,17 @@ Symphony_Sien
  </summary>
  <remarks></remarks>
 </member>
+<member name="M:Symphony_Sien.洗濯関係.#ctor">
+ <summary>
+ コンストラクタ
+ </summary>
+</member>
+<member name="M:Symphony_Sien.洗濯関係.洗濯関係_Load(System.Object,System.EventArgs)">
+ <summary>
+ loadイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
+</member>
 </members>
 </doc>
