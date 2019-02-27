@@ -9,6 +9,9 @@
     'チェックボックス列チェック制御用フラグ
     Private cellValueChangeFlg As Boolean = False
 
+    'セルエンター制御用
+    Private cellEnterFlg As Boolean = False
+
     ''' <summary>
     ''' 行ヘッダーのカレントセルを表す三角マークを非表示に設定する為のクラス。
     ''' </summary>
@@ -52,6 +55,7 @@
         initDgvNam()
         initDgvSisetu()
         initDgvSibutu()
+        
 
         'ﾕﾆｯﾄ配列セット
         unitListBox.Items.AddRange(unitArray)
@@ -90,7 +94,7 @@
         Dim dt As New DataTable()
         dt.Columns.Add("Check", GetType(Boolean))
         dt.Columns.Add("Nam", GetType(String))
-        dt.Columns.Add("Biko", GetType(String))
+        dt.Columns.Add("Memo", GetType(String))
         For i = 0 To 9
             Dim row As DataRow = dt.NewRow()
             row(0) = False
@@ -116,7 +120,7 @@
                 .SortMode = DataGridViewColumnSortMode.NotSortable
             End With
 
-            With .Columns("Biko")
+            With .Columns("Memo")
                 .HeaderText = "備　考"
                 .Width = 170
                 .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -124,7 +128,6 @@
         End With
 
         cellValueChangeFlg = True
-
         dgvResident.CurrentCell.Selected = False
 
     End Sub
@@ -226,19 +229,64 @@
     End Sub
 
     Private Sub displayUnitData(unitName As String)
-        'If Not unitNumDictionary.ContainsKey(unitName) Then
-        '    Return
-        'End If
-        'Dim gyo As Integer = unitNumDictionary(unitName)
-        'Dim cnn As New ADODB.Connection
-        'Dim rs As New ADODB.Recordset
-        'Dim sql As String = "select * from Wash where Gyo=" & gyo & ""
-        'cnn.Open(TopForm.DB_Sien)
-        'rs.Open(sql, cnn, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockReadOnly)
+        If Not unitNumDictionary.ContainsKey(unitName) Then
+            Return
+        End If
 
+        '入力クリア
+        clearInput()
 
-        'rs.Close()
-        'cnn.Close()
+        cellEnterFlg = False
+
+        Dim gyo As Integer = unitNumDictionary(unitName)
+        Dim cnn As New ADODB.Connection
+        Dim rs As New ADODB.Recordset
+        Dim sql As String = "select * from Wash where Gyo=" & gyo & ""
+        cnn.Open(TopForm.DB_Sien)
+        rs.Open(sql, cnn, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockReadOnly)
+
+        If rs.RecordCount > 0 Then
+            For i As Integer = 1 To 10
+                'チェック
+                Dim chk As String = Util.checkDBNullValue(rs.Fields("chk" & i).Value)
+                dgvResident("Check", i - 1).Value = If(chk = "1", True, False)
+                '名前
+                dgvResident("Nam", i - 1).Value = Util.checkDBNullValue(rs.Fields("nam" & i).Value)
+                '備考
+                dgvResident("Memo", i - 1).Value = Util.checkDBNullValue(rs.Fields("mem" & i).Value)
+            Next
+            If gyo = 0 Then
+                For i As Integer = 1 To 21
+                    dgvSisetu("Text", i - 1).Value = Util.checkDBNullValue(rs.Fields("ss" & i).Value)
+                Next
+                For i As Integer = 1 To 17
+                    dgvSibutu("Text", i - 1).Value = Util.checkDBNullValue(rs.Fields("sb" & i).Value)
+                Next
+            End If
+        End If
+
+        rs.Close()
+        cnn.Close()
+
+        cellEnterFlg = True
+    End Sub
+
+    ''' <summary>
+    ''' 入力内容クリア
+    ''' </summary>
+    ''' <remarks></remarks>
+    Private Sub clearInput()
+        For Each row As DataGridViewRow In dgvResident.Rows
+            row.Cells(0).Value = False
+            row.Cells(1).Value = ""
+            row.Cells(2).Value = ""
+        Next
+        For Each row As DataGridViewRow In dgvSisetu.Rows
+            row.Cells(0).Value = ""
+        Next
+        For Each row As DataGridViewRow In dgvSibutu.Rows
+            row.Cells(0).Value = ""
+        Next
     End Sub
 
     Private Sub dgvResident_CellPainting(sender As Object, e As DataGridViewCellPaintingEventArgs) Handles dgvResident.CellPainting
@@ -264,8 +312,10 @@
     End Sub
 
     Private Sub dgv_CellEnter(sender As Object, e As DataGridViewCellEventArgs) Handles dgvResident.CellEnter, dgvSisetu.CellEnter, dgvSibutu.CellEnter
-        Dim dgv As DataGridView = DirectCast(sender, DataGridView)
-        dgv.BeginEdit(False)
+        If cellEnterFlg Then
+            Dim dgv As DataGridView = DirectCast(sender, DataGridView)
+            dgv.BeginEdit(False)
+        End If
     End Sub
 
     Private Sub dgvResident_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles dgvResident.CellValueChanged
@@ -286,5 +336,10 @@
             'コミットする
             dgvResident.CommitEdit(DataGridViewDataErrorContexts.Commit)
         End If
+    End Sub
+
+    Private Sub unitListBox_SelectedValueChanged(sender As Object, e As System.EventArgs) Handles unitListBox.SelectedValueChanged
+        Dim selectedUnitName As String = unitListBox.Text
+        displayUnitData(selectedUnitName)
     End Sub
 End Class
