@@ -69,6 +69,20 @@ Public Class ハウス日誌
     ''' <param name="sender"></param>
     ''' <param name="e"></param>
     Private Sub ハウス日誌_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        'sealBoxフォルダ存在チェック
+        If Not System.IO.Directory.Exists(TopForm.sealBoxDirPath) Then
+            MsgBox(TopForm.sealBoxDirPath & "が存在しません。iniファイルにsealBoxの正しいパスを設定して下さい。")
+            Me.Close()
+            Exit Sub
+        End If
+
+        'Journalデータベース存在チェック
+        If Not System.IO.File.Exists(TopForm.dbJournalFilePath) Then
+            MsgBox(TopForm.dbJournalFilePath & "が存在しません。iniファイルのDB2Dirに正しいパスを設定して下さい。")
+            Me.Close()
+            Exit Sub
+        End If
+
         'dgv初期設定
         initDgv()
 
