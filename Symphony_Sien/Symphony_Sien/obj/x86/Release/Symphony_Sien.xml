@@ -462,11 +462,39 @@ Symphony_Sien
  <param name="sender"></param>
  <param name="e"></param>
 </member>
+<member name="M:Symphony_Sien.洗濯関係.initDgvResident">
+ <summary>
+ 入居者dgv初期設定
+ </summary>
+</member>
+<member name="M:Symphony_Sien.洗濯関係.initDgvSisetu">
+ <summary>
+ 施設dgv初期設定
+ </summary>
+</member>
+<member name="M:Symphony_Sien.洗濯関係.initDgvSibutu">
+ <summary>
+ 私物dgv初期設定
+ </summary>
+</member>
+<member name="M:Symphony_Sien.洗濯関係.displayUnitData(System.String)">
+ <summary>
+ 対象のユニットのデータ表示
+ </summary>
+ <param name="unitName">ユニット名</param>
+</member>
 <member name="M:Symphony_Sien.洗濯関係.clearInput">
  <summary>
  入力内容クリア
  </summary>
  <remarks></remarks>
+</member>
+<member name="M:Symphony_Sien.洗濯関係.btnRegist_Click(System.Object,System.EventArgs)">
+ <summary>
+ 登録ボタンクリックイベント
+ </summary>
+ <param name="sender"></param>
+ <param name="e"></param>
 </member>
 </members>
 </doc>

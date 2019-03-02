@@ -52,10 +52,10 @@
     ''' <param name="e"></param>
     Private Sub 洗濯関係_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'データグリッドビュー初期化
-        initDgvNam()
+        initDgvResident()
         initDgvSisetu()
         initDgvSibutu()
-        
+
 
         'ﾕﾆｯﾄ配列セット
         unitListBox.Items.AddRange(unitArray)
@@ -64,7 +64,10 @@
         unitListBox.SelectedIndex = 0
     End Sub
 
-    Private Sub initDgvNam()
+    ''' <summary>
+    ''' 入居者dgv初期設定
+    ''' </summary>
+    Private Sub initDgvResident()
         Util.EnableDoubleBuffering(dgvResident)
 
         With dgvResident
@@ -92,9 +95,9 @@
 
         '空行追加
         Dim dt As New DataTable()
-        dt.Columns.Add("Check", GetType(Boolean))
-        dt.Columns.Add("Nam", GetType(String))
-        dt.Columns.Add("Memo", GetType(String))
+        dt.Columns.Add("chk", GetType(Boolean))
+        dt.Columns.Add("nam", GetType(String))
+        dt.Columns.Add("mem", GetType(String))
         For i = 0 To 9
             Dim row As DataRow = dt.NewRow()
             row(0) = False
@@ -106,7 +109,7 @@
 
         '幅設定等
         With dgvResident
-            With .Columns("Check")
+            With .Columns("chk")
                 .HeaderText = "ワ"
                 .Width = 20
                 .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -114,13 +117,13 @@
                 .DefaultCellStyle.SelectionBackColor = Color.White
             End With
 
-            With .Columns("Nam")
+            With .Columns("nam")
                 .HeaderText = "氏名"
                 .Width = 107
                 .SortMode = DataGridViewColumnSortMode.NotSortable
             End With
 
-            With .Columns("Memo")
+            With .Columns("mem")
                 .HeaderText = "備　考"
                 .Width = 170
                 .SortMode = DataGridViewColumnSortMode.NotSortable
@@ -132,6 +135,9 @@
 
     End Sub
 
+    ''' <summary>
+    ''' 施設dgv初期設定
+    ''' </summary>
     Private Sub initDgvSisetu()
         Util.EnableDoubleBuffering(dgvSisetu)
 
@@ -180,6 +186,9 @@
 
     End Sub
 
+    ''' <summary>
+    ''' 私物dgv初期設定
+    ''' </summary>
     Private Sub initDgvSibutu()
         Util.EnableDoubleBuffering(dgvSibutu)
 
@@ -228,6 +237,10 @@
 
     End Sub
 
+    ''' <summary>
+    ''' 対象のユニットのデータ表示
+    ''' </summary>
+    ''' <param name="unitName">ユニット名</param>
     Private Sub displayUnitData(unitName As String)
         If Not unitNumDictionary.ContainsKey(unitName) Then
             Return
@@ -237,6 +250,14 @@
         clearInput()
 
         cellEnterFlg = False
+
+        If unitName = "森" Then
+            dgvSisetu.Visible = True
+            dgvSibutu.Visible = True
+        Else
+            dgvSisetu.Visible = False
+            dgvSibutu.Visible = False
+        End If
 
         Dim gyo As Integer = unitNumDictionary(unitName)
         Dim cnn As New ADODB.Connection
@@ -249,11 +270,11 @@
             For i As Integer = 1 To 10
                 'チェック
                 Dim chk As String = Util.checkDBNullValue(rs.Fields("chk" & i).Value)
-                dgvResident("Check", i - 1).Value = If(chk = "1", True, False)
+                dgvResident("chk", i - 1).Value = If(chk = "1", True, False)
                 '名前
-                dgvResident("Nam", i - 1).Value = Util.checkDBNullValue(rs.Fields("nam" & i).Value)
+                dgvResident("nam", i - 1).Value = Util.checkDBNullValue(rs.Fields("nam" & i).Value)
                 '備考
-                dgvResident("Memo", i - 1).Value = Util.checkDBNullValue(rs.Fields("mem" & i).Value)
+                dgvResident("mem", i - 1).Value = Util.checkDBNullValue(rs.Fields("mem" & i).Value)
             Next
             If gyo = 0 Then
                 For i As Integer = 1 To 21
@@ -341,5 +362,57 @@
     Private Sub unitListBox_SelectedValueChanged(sender As Object, e As System.EventArgs) Handles unitListBox.SelectedValueChanged
         Dim selectedUnitName As String = unitListBox.Text
         displayUnitData(selectedUnitName)
+    End Sub
+
+    ''' <summary>
+    ''' 登録ボタンクリックイベント
+    ''' </summary>
+    ''' <param name="sender"></param>
+    ''' <param name="e"></param>
+    Private Sub btnRegist_Click(sender As Object, e As EventArgs) Handles btnRegist.Click
+        Dim unitName As String = unitListBox.Text
+        Dim unitNumber As Integer
+        If unitNumDictionary.ContainsKey(unitName) Then
+            unitNumber = unitNumDictionary(unitName)
+        Else
+            MsgBox("ユニット名を選択して下さい。", MsgBoxStyle.Exclamation)
+            Return
+        End If
+
+        Dim cnn As New ADODB.Connection
+        cnn.Open(TopForm.DB_Sien)
+        Dim rs As New ADODB.Recordset
+        Dim sql As String = "select * from Wash where Gyo=" & unitNumber
+        rs.Open(sql, cnn, ADODB.CursorTypeEnum.adOpenKeyset, ADODB.LockTypeEnum.adLockOptimistic)
+        If rs.RecordCount = 0 OrElse rs.RecordCount = 1 Then
+            If rs.RecordCount = 0 Then
+                '新規登録
+                rs.AddNew()
+            End If
+            rs.Fields("Gyo").Value = unitNumber
+            For i As Integer = 1 To 10
+                rs.Fields("chk" & i).Value = If(dgvResident("chk", i - 1).Value = True, "1", "0")
+                rs.Fields("nam" & i).Value = Util.checkDBNullValue(dgvResident("nam", i - 1).Value)
+                rs.Fields("mem" & i).Value = Util.checkDBNullValue(dgvResident("mem", i - 1).Value)
+            Next
+            If unitNumber = 0 Then
+                '施設
+                For i As Integer = 1 To 21
+                    rs.Fields("ss" & i).Value = Util.checkDBNullValue(dgvSisetu(0, i - 1).Value)
+                Next
+
+                '私物
+                For i As Integer = 1 To 17
+                    rs.Fields("sb" & i).Value = Util.checkDBNullValue(dgvSibutu(0, i - 1).Value)
+                Next
+            End If
+            rs.Update()
+            rs.Close()
+            cnn.Close()
+            MsgBox("登録しました。", MsgBoxStyle.Information)
+        Else
+            rs.Close()
+            cnn.Close()
+        End If
     End Sub
 End Class
