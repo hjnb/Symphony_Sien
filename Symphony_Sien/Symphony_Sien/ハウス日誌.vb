@@ -455,7 +455,7 @@ Public Class ハウス日誌
         Dim eraNum As String = CInt(warekiStr.Substring(1, 2))
         Dim monthNum As String = CInt(warekiStr.Substring(4, 2))
         Dim dateNum As String = CInt(warekiStr.Substring(7, 2))
-        Return kanji & " " & eraNum & " 年 " & monthNum & " 月 " & dateNum & " 日 " & "(" & day & ")"
+        Return kanji & " " & eraNum & " 年 " & monthNum & " 月 " & dateNum & " 日 " & "( " & day & " )"
     End Function
 
     ''' <summary>
