@@ -316,9 +316,6 @@ Public Class ハウス日誌
             rs.Close()
             cnn.Close()
         End If
-
-        'フォーカス
-        weatherBox.Focus()
     End Sub
 
     ''' <summary>
