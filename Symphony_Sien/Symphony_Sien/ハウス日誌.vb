@@ -423,7 +423,7 @@ Public Class ハウス日誌
             result = 0
         ElseIf Not System.Text.RegularExpressions.Regex.IsMatch(inputText, "^\d+$") Then
             result = ERROR_HALF_NUMBER
-        ElseIf boxType = "H" AndAlso CInt(inputText) >= 25 Then
+        ElseIf boxType = "H" AndAlso CInt(inputText) >= 24 Then
             result = ERROR_24HOUR
         ElseIf boxType = "M" AndAlso CInt(inputText) >= 60 Then
             result = ERROR_CORRECT_TIME
