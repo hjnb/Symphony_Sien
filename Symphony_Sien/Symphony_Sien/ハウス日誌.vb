@@ -456,6 +456,25 @@ Public Class ハウス日誌
     End Function
 
     ''' <summary>
+    ''' フォーマット
+    ''' </summary>
+    ''' <param name="adStr"></param>
+    ''' <returns></returns>
+    ''' <remarks></remarks>
+    Private Function formatDateADStr(adStr As String) As String
+        If adStr = "" Then
+            Return ""
+        End If
+
+        Dim yyyy As Integer = CInt(adStr.Split("/")(0))
+        Dim mm As Integer = CInt(adStr.Split("/")(1))
+        Dim dd As Integer = CInt(adStr.Split("/")(2))
+        Dim day As String = dayArray(New DateTime(yyyy, mm, dd).DayOfWeek)
+        
+        Return yyyy.ToString() & " 年 " & mm.ToString() & " 月 " & dd.ToString() & " 日 " & "( " & day & " )"
+    End Function
+
+    ''' <summary>
     ''' 登録ボタンクリックイベント
     ''' </summary>
     ''' <param name="sender"></param>
@@ -677,7 +696,7 @@ Public Class ハウス日誌
             Dim num As Integer = rs.Fields("Num").Value
             If num = 1 Then
                 '日付、天気
-                pageDataArray(0, 0) = formatDateStr(ymd)
+                pageDataArray(0, 0) = formatDateADStr(ymd)
                 pageDataArray(0, 23) = "天気"
                 pageDataArray(0, 30) = "/"
                 pageDataArray(0, 32) = Util.checkDBNullValue(rs.Fields("Tenki").Value)

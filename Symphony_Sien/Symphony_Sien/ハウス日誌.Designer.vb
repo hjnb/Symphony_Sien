@@ -22,7 +22,6 @@ Partial Class ハウス日誌
     'コード エディターを使って変更しないでください。
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
-        Me.YmdBox = New ymdBox.ymdBox()
         Me.weatherBox = New System.Windows.Forms.ComboBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.Label2 = New System.Windows.Forms.Label()
@@ -225,6 +224,7 @@ Partial Class ハウス日誌
         Me.Label67 = New System.Windows.Forms.Label()
         Me.Label68 = New System.Windows.Forms.Label()
         Me.Label69 = New System.Windows.Forms.Label()
+        Me.YmdBox = New ADBox2.ADBox2()
         CType(Me.sign1Box, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.sign7Box, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.sign9Box, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -244,19 +244,6 @@ Partial Class ハウス日誌
         CType(Me.dgvYuri, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.dgvHamanasu, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
-        '
-        'YmdBox
-        '
-        Me.YmdBox.boxType = 8
-        Me.YmdBox.DateText = ""
-        Me.YmdBox.EraLabelText = "H31"
-        Me.YmdBox.EraText = ""
-        Me.YmdBox.Location = New System.Drawing.Point(21, 25)
-        Me.YmdBox.MonthLabelText = "03"
-        Me.YmdBox.MonthText = ""
-        Me.YmdBox.Name = "YmdBox"
-        Me.YmdBox.Size = New System.Drawing.Size(174, 46)
-        Me.YmdBox.TabIndex = 200
         '
         'weatherBox
         '
@@ -2138,11 +2125,24 @@ Partial Class ハウス日誌
         Me.Label69.TabIndex = 202
         Me.Label69.Text = "入力して下さい（例/  15:09）"
         '
+        'YmdBox
+        '
+        Me.YmdBox.dateText = ""
+        Me.YmdBox.Location = New System.Drawing.Point(18, 12)
+        Me.YmdBox.Mode = 4
+        Me.YmdBox.monthText = ""
+        Me.YmdBox.Name = "YmdBox"
+        Me.YmdBox.Size = New System.Drawing.Size(181, 45)
+        Me.YmdBox.TabIndex = 200
+        Me.YmdBox.textReadOnly = False
+        Me.YmdBox.yearText = ""
+        '
         'ハウス日誌
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(1008, 691)
+        Me.Controls.Add(Me.YmdBox)
         Me.Controls.Add(Me.Label69)
         Me.Controls.Add(Me.Label68)
         Me.Controls.Add(Me.Label63)
@@ -2345,7 +2345,6 @@ Partial Class ハウス日誌
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label1)
         Me.Controls.Add(Me.weatherBox)
-        Me.Controls.Add(Me.YmdBox)
         Me.Name = "ハウス日誌"
         Me.Text = "生活支援ハウス業務日誌"
         CType(Me.sign1Box, System.ComponentModel.ISupportInitialize).EndInit()
@@ -2371,7 +2370,6 @@ Partial Class ハウス日誌
 
     End Sub
 
-    Friend WithEvents YmdBox As ymdBox.ymdBox
     Friend WithEvents weatherBox As ComboBox
     Friend WithEvents Label1 As Label
     Friend WithEvents Label2 As Label
@@ -2574,4 +2572,5 @@ Partial Class ハウス日誌
     Friend WithEvents Label67 As Label
     Friend WithEvents Label68 As Label
     Friend WithEvents Label69 As Label
+    Friend WithEvents YmdBox As ADBox2.ADBox2
 End Class

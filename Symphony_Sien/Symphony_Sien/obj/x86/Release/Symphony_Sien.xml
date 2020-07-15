@@ -312,6 +312,13 @@ Symphony_Sien
 	<param name="adStr"></param>
 	<returns></returns>
 	<remarks></remarks>
+</member><member name="M:Symphony_Sien.ハウス日誌.formatDateADStr(System.String)">
+	<summary>
+ フォーマット
+ </summary>
+	<param name="adStr"></param>
+	<returns></returns>
+	<remarks></remarks>
 </member><member name="M:Symphony_Sien.ハウス日誌.btnRegist_Click(System.Object,System.EventArgs)">
 	<summary>
  登録ボタンクリックイベント
